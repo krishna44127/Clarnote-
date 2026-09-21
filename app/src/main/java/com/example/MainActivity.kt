@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
@@ -170,6 +171,15 @@ fun ClarNoteMainApp(viewModel: ClarNoteViewModel) {
     // Real Native SAF System File Picker Launcher
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris ->
+        if (!uris.isNullOrEmpty()) {
+            viewModel.importFilesFromUris(uris, activeFolder)
+        }
+    }
+
+    // Native Photo Picker Launcher for Gallery Action
+    val galleryPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia()
     ) { uris ->
         if (!uris.isNullOrEmpty()) {
             viewModel.importFilesFromUris(uris, activeFolder)
@@ -353,7 +363,10 @@ fun ClarNoteMainApp(viewModel: ClarNoteViewModel) {
                 // Real Native SAF System File Picker (Supports all study documents, PDFs, etc.)
                 filePickerLauncher.launch(arrayOf("*/*"))
             },
-            onOpenScratchpad = { showScratchpadDialog = true }
+            onOpenScratchpad = { showScratchpadDialog = true },
+            onOpenGalleryImport = {
+                galleryPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
         )
     }
 

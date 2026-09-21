@@ -1,51 +1,15 @@
 package com.example.ui.components
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Audiotrack
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.DocumentScanner
-import androidx.compose.material.icons.filled.EditNote
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.PictureAsPdf
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,33 +18,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.BadgeCameraBg
-import com.example.ui.theme.BadgeCameraIcon
-import com.example.ui.theme.BadgeCanvasBg
-import com.example.ui.theme.BadgeCanvasIcon
-import com.example.ui.theme.BadgeDocsBg
-import com.example.ui.theme.BadgeDocsIcon
-import com.example.ui.theme.BadgeFolderBg
-import com.example.ui.theme.BadgeFolderIcon
-import com.example.ui.theme.BadgeGalleryBg
-import com.example.ui.theme.BadgeGalleryIcon
-import com.example.ui.theme.BadgeScannerBg
-import com.example.ui.theme.BadgeScannerIcon
-import com.example.ui.theme.BrandAquaBlue
-import com.example.ui.theme.BrandElectricCyan
-import com.example.ui.theme.BrandMintGreen
-import com.example.ui.theme.ClarNoteBrandGradient
-import com.example.ui.theme.FrostedSlateBorder
-import com.example.ui.theme.FrostedSlateSurface
-import com.example.ui.theme.MidnightNavyBg
-import com.example.ui.theme.PrimaryBlue
+import com.example.ui.theme.*
 
 @Composable
 fun FloatingQuickActionButton(
@@ -89,7 +33,7 @@ fun FloatingQuickActionButton(
 ) {
     Box(
         modifier = modifier
-            .size(58.dp)
+            .size(56.dp)
             .clip(CircleShape)
             .background(ClarNoteBrandGradient)
             .clickable(onClick = onClick)
@@ -100,7 +44,7 @@ fun FloatingQuickActionButton(
             imageVector = Icons.Default.Add,
             contentDescription = "Quick Action (+)",
             tint = Color(0xFF0B101D),
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(28.dp)
         )
     }
 }
@@ -114,13 +58,14 @@ fun QuickActionMenuSheet(
     onOpenPdfMerger: () -> Unit,
     onOpenVoiceMemo: () -> Unit,
     onOpenPdfImport: () -> Unit,
-    onOpenScratchpad: () -> Unit
+    onOpenScratchpad: () -> Unit,
+    onOpenGalleryImport: () -> Unit = {}
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = FrostedSlateSurface,
-        scrimColor = Color.Black.copy(alpha = 0.6f),
+        containerColor = FrostedSlateSurface, // Dark Slate Glass #131D2E
+        scrimColor = Color.Black.copy(alpha = 0.65f),
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         modifier = Modifier.testTag("quick_action_sheet")
     ) {
@@ -135,99 +80,149 @@ fun QuickActionMenuSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    ClarNoteSparkleIcon(size = 18.dp, tint = BrandElectricCyan)
+                    ClarNoteSparkleIcon(size = 20.dp, tint = BrandElectricCyan)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "ClarNote Quick Actions (+)",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold, color = Color.White)
+                        text = "Let's get started",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
                     )
                 }
                 IconButton(onClick = onDismiss) {
-                    Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.White.copy(alpha = 0.8f))
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = Color.White.copy(alpha = 0.8f)
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-            // 1. Canvas & Scratchpad: Soft Violet Glow (#818CF8 on #1E1B4B)
-            QuickActionItem(
-                icon = Icons.Default.Create,
-                iconColor = BadgeCanvasIcon,
-                iconBgColor = BadgeCanvasBg,
-                title = "Canvas & Handwriting Scratchpad",
-                description = "Freeform pen drawing, rough derivation, equations & formulas",
-                onClick = {
-                    onDismiss()
-                    onOpenScratchpad()
+            // Side-by-side Top Cards: Canvas & Documents
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(84.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            onDismiss()
+                            onOpenScratchpad()
+                        },
+                    color = BadgeCanvasBg,
+                    border = BorderStroke(1.dp, BadgeCanvasIcon.copy(alpha = 0.4f)),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(12.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Create,
+                            contentDescription = null,
+                            tint = BadgeCanvasIcon,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text("Canvas", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
                 }
-            )
 
-            // 2. Documents & PDF Import: Coral Red Badge (#F87171 on #450A0A)
-            QuickActionItem(
-                icon = Icons.Default.Description,
-                iconColor = BadgeDocsIcon,
-                iconBgColor = BadgeDocsBg,
-                title = "Documents & PDF Import",
-                description = "Import lecture PDFs, slides & heavy study material with 68% compression",
-                onClick = {
-                    onDismiss()
-                    onOpenPdfImport()
+                Surface(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(84.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            onDismiss()
+                            onOpenPdfImport()
+                        },
+                    color = BadgeDocsBg,
+                    border = BorderStroke(1.dp, BadgeDocsIcon.copy(alpha = 0.4f)),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(12.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Description,
+                            contentDescription = null,
+                            tint = BadgeDocsIcon,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("Documents", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        Text("PDF, DOC, PPT...", color = Color(0xFF94A3B8), fontSize = 10.sp)
+                    }
                 }
-            )
+            }
 
-            // 3. Instant Camera Capture: Sky Blue Badge (#38BDF8 on #0C4A6E)
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Action List Items
             QuickActionItem(
                 icon = Icons.Default.CameraAlt,
                 iconColor = BadgeCameraIcon,
                 iconBgColor = BadgeCameraBg,
-                title = "Instant Camera Capture",
-                description = "Snap whiteboard or notebook page with auto-perspective adjustment",
+                title = "Take Photo",
+                description = "Capture a photo instantly",
                 onClick = {
                     onDismiss()
                     onOpenScanner()
                 }
             )
 
-            // 4. Document Scanner: Electric Cyan Badge (#06B6D4 on #164E63)
             QuickActionItem(
                 icon = Icons.Default.DocumentScanner,
                 iconColor = BadgeScannerIcon,
                 iconBgColor = BadgeScannerBg,
-                title = "Document Scanner",
-                description = "High-contrast crystal-clear scanner with automated edge cropping",
+                title = "Scan",
+                description = "Scan papers and documents",
                 onClick = {
                     onDismiss()
                     onOpenScanner()
                 }
             )
 
-            // 5. Gallery & Photos to PDF: Mint Green Badge (#34D399 on #064E3B)
             QuickActionItem(
                 icon = Icons.Default.PhotoLibrary,
                 iconColor = BadgeGalleryIcon,
                 iconBgColor = BadgeGalleryBg,
-                title = "Gallery & Photos to PDF",
-                description = "Pick photos from device or Google Photos to arrange into 1 crisp PDF",
+                title = "Gallery",
+                description = "Add photo from your gallery",
                 onClick = {
                     onDismiss()
-                    onOpenPdfMerger()
+                    onOpenGalleryImport()
                 }
             )
 
-            // 6. New Subject Folder: Warm Amber Badge (#FBBF24 on #451A03)
+            HorizontalDivider(
+                color = FrostedSlateBorder,
+                modifier = Modifier.padding(vertical = 6.dp)
+            )
+
             QuickActionItem(
                 icon = Icons.Default.Folder,
                 iconColor = BadgeFolderIcon,
                 iconBgColor = BadgeFolderBg,
-                title = "New Subject Folder",
-                description = "Create a custom subject category (e.g. Organic Chem, Modern Physics)",
+                title = "Folder",
+                description = "Create a new subject folder",
                 onClick = {
                     onDismiss()
                     onOpenCreateFolder()
                 }
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(18.dp))
         }
     }
 }
@@ -236,70 +231,54 @@ fun QuickActionMenuSheet(
 fun QuickActionItem(
     icon: ImageVector,
     iconColor: Color,
-    iconBgColor: Color = iconColor.copy(alpha = 0.16f),
+    iconBgColor: Color,
     title: String,
     description: String,
     onClick: () -> Unit
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "icon_pulse")
-    val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.85f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulse_alpha"
-    )
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .padding(vertical = 4.dp)
+            .clip(RoundedCornerShape(14.dp))
             .clickable(onClick = onClick),
-        color = FrostedSlateSurface, // Dark Slate Glass (#131D2E)
-        border = BorderStroke(1.dp, FrostedSlateBorder), // 1px subtle border (#1E2B45)
-        shape = RoundedCornerShape(16.dp)
+        color = FrostedSlateSurface,
+        border = BorderStroke(1.dp, FrostedSlateBorder),
+        shape = RoundedCornerShape(14.dp)
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Vibrant Icon Badge in soft glowing container
             Box(
                 modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(10.dp))
                     .background(iconBgColor)
-                    .border(1.dp, iconColor.copy(alpha = 0.35f * pulseAlpha), RoundedCornerShape(12.dp)),
+                    .border(1.dp, iconColor.copy(alpha = 0.35f), RoundedCornerShape(10.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = iconColor,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(14.dp))
+
+            Spacer(modifier = Modifier.width(12.dp))
+
             Column {
-                // Title Text: Pure Crisp White (#FFFFFF), SemiBold (600), 15sp
                 Text(
                     text = title,
-                    color = Color(0xFFFFFFFF),
+                    color = Color.White,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 15.sp,
-                    lineHeight = 20.sp
+                    fontSize = 14.sp
                 )
-                Spacer(modifier = Modifier.height(2.dp))
-                // Subtitle Text: Soft Cyan-Slate (#94A3B8), Regular (400), 12sp
                 Text(
                     text = description,
                     color = Color(0xFF94A3B8),
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp
+                    fontSize = 12.sp
                 )
             }
         }
