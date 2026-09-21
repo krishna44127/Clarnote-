@@ -1,0 +1,6 @@
+{
+  "name": "ClarNote",
+  "description": "Smart study and note management app with instant upload, duplicate detection, auto-categorization, OCR, drawing tools, flashcards, and locked vault.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
