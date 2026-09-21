@@ -343,12 +343,26 @@ fun ClarNoteMainApp(viewModel: ClarNoteViewModel) {
             ClarNoteFloatingDock(
                 selectedTab = selectedTab,
                 onSelectTab = { viewModel.selectTab(it) },
-                onOpenGeminiStudio = { showGeminiFolderSheet = true },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp)
             )
         }
+    }
+
+    // Gemini Study Copilot at Home / General Level (opens from Home header sparkle)
+    if (showGeminiFolderSheet) {
+        val generalStudyNote = activeNotes.firstOrNull() ?: NoteItem(
+            title = "ClarNote Study Assistant",
+            content = "General study assistant for concepts, summaries, revision notes, derivations, and formulas across all your subjects.",
+            ocrText = "ClarNote Study Copilot: Ask any academic or study question.",
+            type = NoteType.TEXT,
+            subject = "General Study"
+        )
+        GeminiStudyCopilotSheet(
+            note = generalStudyNote,
+            onDismiss = { showGeminiFolderSheet = false }
+        )
     }
 
     // Quick Actions Sheet (+)
@@ -507,8 +521,8 @@ fun ClarNoteMainApp(viewModel: ClarNoteViewModel) {
 fun ClarNoteFloatingDock(
     selectedTab: Int,
     onSelectTab: (Int) -> Unit,
-    onOpenGeminiStudio: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenGeminiStudio: () -> Unit = {}
 ) {
     Surface(
         shape = RoundedCornerShape(32.dp),
@@ -520,9 +534,9 @@ fun ClarNoteFloatingDock(
             .testTag("bottom_nav_bar")
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(28.dp)
         ) {
             // Tab 0: Home (Clean Folders Grid)
             DockNavigationItem(
@@ -532,23 +546,6 @@ fun ClarNoteFloatingDock(
                 onClick = { onSelectTab(0) },
                 testTag = "nav_tab_home"
             )
-
-            // Center Tab: Live Gemini Sparkle Star
-            Box(
-                modifier = Modifier
-                    .size(46.dp)
-                    .clip(CircleShape)
-                    .background(ClarNoteBrandGradient)
-                    .clickable(onClick = onOpenGeminiStudio)
-                    .testTag("nav_tab_gemini_sparkle"),
-                contentAlignment = Alignment.Center
-            ) {
-                ClarNoteSparkleIcon(
-                    size = 24.dp,
-                    tint = Color(0xFF0B101D),
-                    withOuterGlow = true
-                )
-            }
 
             // Tab 1: VIP Vault / Starred
             DockNavigationItem(
